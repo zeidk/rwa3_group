@@ -171,14 +171,14 @@ class BotController(object):
         while not rospy.is_shutdown():
             self.run(0, angular_velocity)
             self._rate.sleep()
-            t1 = rospy.Time.now().to_sec()
+            t_current = rospy.Time.now().to_sec()
 
             rospy.loginfo("t0: {t}".format(t=t0))
-            rospy.loginfo("t1: {t}".format(t=t1))
-            current_angle = (t1 - t0) * angular_velocity
+            rospy.loginfo("t1: {t}".format(t=t_current))
+            current_angle = (t_current - t0) * angular_velocity
             rospy.loginfo("current angle: {}".format(current_angle))
             if abs(current_angle) >= radians(abs(relative_angle)):
-                rospy.loginfo("reached")
+                rospy.loginfo("Relative angle reached")
                 self.run(0, 0)
                 break
 
