@@ -16,5 +16,3 @@ The Gazebo world used in this package uses some custom models that can be found 
 
 We need the Waffle model for this assignment. Make sure you have the following line in `.bashrc`:
 - `export TURTLEBOT3_MODEL=waffle`
-`
-
