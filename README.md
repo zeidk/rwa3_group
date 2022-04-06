@@ -20,6 +20,6 @@ We need the Waffle model for this assignment. Make sure you have the following l
 Start the environment to make sure the ArUco markers appear in the environment.
 - `roslaunch rwa3_group rwa3.launch`
 
-Your environment should be similar as the following picture.
+Your environment should be similar as the one shown in the following picture (1 robot + 3 ArUco markers).
 
 ![RWA3 World](figure/rwa3_world.jpg)
