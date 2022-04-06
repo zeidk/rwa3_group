@@ -107,9 +107,9 @@ class BotController(object):
         self._initial_y_pos = self.current_y_pos
 
         linear_velocity = 0.0
-        if forward:
+        if distance_to_drive > 0:
             linear_velocity = 0.3
-        else:
+        elif distance_to_drive < 0:
             linear_velocity = -0.3
 
         # compute the driven distance
@@ -121,7 +121,7 @@ class BotController(object):
 
         # keep moving the robot until the distance is reached
         while not rospy.is_shutdown():
-            if driven_distance <= distance_to_drive:
+            if driven_distance <= abs(distance_to_drive):
                 driven_distance = compute_distance(
                     self._initial_x_pos,
                     self._initial_y_pos,
@@ -264,20 +264,12 @@ class BotController(object):
         # drive straight, rotate, or go to goal
         action_name = rospy.get_param("~action")
 
-        if action_name == "drive_f" or action_name == "drive_b":
-            forward = False
-            if action_name == "drive_f":
-                forward = True
-            elif action_name == "drive_b":
-                forward = False
-            else:
-                rospy.logerr("Missing drive_f or drive_b parameter")
-                rospy.on_shutdown(self.myhook)
-                sys.exit(1)
-
+        if action_name == "drive":
             distance = rospy.get_param("~distance")
-            if distance:
-                self.go_straight_tf(distance, forward)
+            if distance > 0:
+                self.go_straight_tf(distance, True)
+            elif distance < 0:
+                self.go_straight_tf(distance, False)
             else:
                 rospy.logerr("Distance not provided")
                 rospy.on_shutdown(self.myhook)
