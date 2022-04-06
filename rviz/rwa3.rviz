@@ -5,7 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Status1
-        - /TF1/Frames1
+        - /TF1
       Splitter Ratio: 0.8058823347091675
     Tree Height: 478
   - Class: rviz/Selection
@@ -145,7 +145,7 @@ Visualization Manager:
       Frames:
         All Enabled: false
         base_footprint:
-          Value: false
+          Value: true
         base_link:
           Value: false
         base_scan:
@@ -166,8 +166,10 @@ Visualization Manager:
           Value: false
         imu_link:
           Value: false
+        my_frame:
+          Value: true
         odom:
-          Value: false
+          Value: true
         wheel_left_link:
           Value: false
         wheel_right_link:
@@ -189,7 +191,8 @@ Visualization Manager:
                     {}
                 camera_rgb_frame:
                   camera_rgb_optical_frame:
-                    {}
+                    my_frame:
+                      {}
               caster_back_left_link:
                 {}
               caster_back_right_link:
@@ -237,18 +240,18 @@ Visualization Manager:
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 0.3934808075428009
-        Y: -0.013212502002716064
-        Z: -0.26889052987098694
+        X: 0.207162544131279
+        Y: 0.11358381807804108
+        Z: -0.1549500972032547
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.785398006439209
+      Pitch: 0.5903980731964111
       Target Frame: <Fixed Frame>
       Value: Orbit (rviz)
-      Yaw: 0.785398006439209
+      Yaw: 1.550397276878357
     Saved: ~
 Window Geometry:
   Displays:

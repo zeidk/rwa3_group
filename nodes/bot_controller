@@ -72,6 +72,12 @@ class BotController(object):
         self._current_orientation = orientation
 
     def odom_callback(self, msg):
+        """
+        Callback function for the Topic odom
+
+        Args:
+            msg (nav_msgs/Odometry): Odometry message
+        """
         quaternion = (msg.pose.pose.orientation.x, msg.pose.pose.orientation.y,
                       msg.pose.pose.orientation.z, msg.pose.pose.orientation.w)
 
@@ -79,9 +85,9 @@ class BotController(object):
         self.current_y_pos = msg.pose.pose.position.y
         self.current_orientation = euler_from_quaternion(quaternion)
 
-    def get_odom_data(self):
+    def get_transform(self):
         """
-        Get the current pose of the robot from the /odom topic
+        Get the current pose of the robot in the world frame.
         """
         try:
             now = rospy.Time.now()
@@ -102,7 +108,15 @@ class BotController(object):
             rospy.logfatal("TF Exception")
 
     def go_straight_tf(self, distance_to_drive, forward=True):
-        self.get_odom_data()
+        """
+        Move a robot in a straight line.
+        This version uses a TF listener.
+
+        Args:
+            distance_to_drive (float): Distance to drive in meter.
+            forward (bool, optional): Direction. Defaults to True.
+        """
+        self.get_transform()
         self._initial_x_pos = self.current_x_pos
         self._initial_y_pos = self.current_y_pos
 
@@ -135,6 +149,15 @@ class BotController(object):
             self._rate.sleep()
 
     def go_straight_time(self, distance_to_drive, forward=True):
+        """
+        Move the robot in a straight line.
+        This version uses the formula:
+        distance = velocity * (t0 - tcurrent)
+
+        Args:
+            distance_to_drive (float): distance to drive in meter.
+            forward (bool, optional): Direction. Defaults to True.
+        """
         # original time
         rospy.sleep(2)
         t_0 = rospy.Time.now().to_sec()
@@ -159,6 +182,12 @@ class BotController(object):
             self._rate.sleep()
 
     def rotate(self, relative_angle):
+        """
+        Rotate the robot a relative angle
+
+        Args:
+            relative_angle (float): Relative angle
+        """
         if relative_angle > 0:
             angular_velocity = 0.1
         elif relative_angle < 0:
@@ -192,7 +221,7 @@ class BotController(object):
         """
         rospy.loginfo("Go to goal ({}, {})".format(goal_x, goal_y))
         # get position and yaw from transform
-        self.get_odom_data()
+        self.get_transform()
 
         distance_to_goal = compute_distance(
             self.current_x_pos, self.current_y_pos, goal_x, goal_y)
@@ -238,7 +267,7 @@ class BotController(object):
 
     def run(self, linear, angular):
         """
-        Publish linear and angular velocities to cmd_vel Topic
+        Publish linear and angular velocities to cmd_vel Topic.
 
         Args:
             linear (float): linear velocity
@@ -291,10 +320,21 @@ class BotController(object):
                 rospy.logerr("x or y is missing")
                 rospy.on_shutdown(self.myhook)
                 sys.exit(1)
+        elif action_name == "broadcast":
+            while not rospy.is_shutdown():
+                self.broadcast()
         else:
             rospy.logerr("Unknown action")
             rospy.on_shutdown(self.myhook)
             sys.exit(1)
+
+    def broadcast(self):
+        br = tf.TransformBroadcaster()
+        br.sendTransform((0.1, 0.2, 1),
+                         tf.transformations.quaternion_from_euler(0, 0, 3.14),
+                         rospy.Time.now(),
+                         "my_frame",
+                         "/camera_rgb_optical_frame")
 
 
 if __name__ == '__main__':

@@ -1,7 +1,7 @@
 <launch>
   <arg name="world_name" default="$(find rwa3_group)/world/empty.world" />
   <arg name="robot_name" value="explorer" />
-  <arg name="init_pose" value="-x 0 -y 0 -z 0" />
+  <arg name="init_pose" value="-x 1 -y 1 -z 0" />
 
   <!-- Launch gazebo -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
