@@ -3,6 +3,8 @@
 import rospy
 import sys
 import tf
+import os
+import yaml
 from geometry_msgs.msg import Twist, Point
 from nav_msgs.msg import Odometry
 from my_package.util import compute_distance
@@ -323,6 +325,8 @@ class BotController(object):
         elif action_name == "broadcast":
             while not rospy.is_shutdown():
                 self.broadcast()
+        elif action_name == "yaml":
+            self.update_yaml()
         else:
             rospy.logerr("Unknown action")
             rospy.on_shutdown(self.myhook)
@@ -333,8 +337,17 @@ class BotController(object):
         br.sendTransform((0.1, 0.2, 1),
                          tf.transformations.quaternion_from_euler(0, 0, 3.14),
                          rospy.Time.now(),
-                         "my_frame",
+                         "marker",
                          "/camera_rgb_optical_frame")
+
+    def update_yaml(self):
+        fname = "output/test.yaml"
+        stream = open(fname, 'r')
+        data = yaml.load(stream)
+        data['aruco_marker_0']['xyz'] = [0, 10, 0]
+        data['aruco_marker_0']['rpy'] = [1, 1, 1]
+        with open(fname, 'w') as yaml_file:
+            yaml_file.write(yaml.dump(data, default_flow_style=False))
 
 
 if __name__ == '__main__':
