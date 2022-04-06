@@ -22,4 +22,4 @@ Start the environment to make sure the ArUco markers appear in the environment.
 
 Your environment should be similar as the following picture.
 
-[RWA3 World](figure/rwa3_world.jpg)
+![RWA3 World](figure/rwa3_world.jpg)
